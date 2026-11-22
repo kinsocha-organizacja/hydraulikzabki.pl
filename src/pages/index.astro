@@ -1,26 +1,104 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';
-import Services from '../components/Services.astro';
-import CtaBand from '../components/CtaBand.astro';
-import Process from '../components/Process.astro';
-import Area from '../components/Area.astro';
-import SeoContent from '../components/SeoContent.astro';
-import Faq from '../components/Faq.astro';
-import Footer from '../components/Footer.astro';
----
+import Layout from "../layouts/Layout.astro";
+import site from "../config/site.json";
 
-<Layout>
-  <Header />
-  <main id="top">
-    <Hero />
-    <Services />
-    <CtaBand />
-    <Process />
-    <Area />
-    <SeoContent />
-    <Faq />
-  </main>
-  <Footer />
+const faq = [
+  {
+    q: "Jak szybko możesz przyjechać do Ząbek?",
+    a: "Termin ustalamy podczas rozmowy telefonicznej. Zadzwoń pod numer " + site.phone + ", powiedz, co się dzieje, a podam najbliższą możliwą godzinę przyjazdu. Obsługuję Ząbki, Marki, Zielonkę oraz Targówek i Rembertów.",
+  },
+  {
+    q: "Od czego zależy cena wizyty hydraulika?",
+    a: "Cena zależy od kilku czynników: rodzaju usterki, długości odcinka instalacji, dostępu do rur i armatury oraz pory dnia. Zakres prac i koszt podaję przed rozpoczęciem pracy, więc nie ma niespodzianek po wizycie.",
+  },
+  {
+    q: "Zlew w kuchni przestał odpływać. Jak to udrażniasz?",
+    a: "Odkręcam syfon i wprowadzam do instalacji elektryczną sprężynę, która rozbija tłuszcz i resztki jedzenia. Zabieg trwa przeważnie od kilku do kilkunastu minut. Po udrożnieniu sprawdzam odpływ i dopiero wtedy kończę pracę.",
+  },
+  {
+    q: "Czym jest WUKO i kiedy się je stosuje?",
+    a: "WUKO to czyszczenie rur wodą pod ciśnieniem. Stosuję je na zewnątrz budynku: w przyłączu kanalizacyjnym, rurze prowadzącej do szamba i w odcinkach między studzienkami. Metodę dobieram po rozmowie o instalacji.",
+  },
+  {
+    q: "Czy podłączysz pralkę, zmywarkę lub stację robota sprzątającego?",
+    a: "Tak. Podłączam dopływ wody i odpływ do kanalizacji, a po montażu sprawdzam szczelność wszystkich połączeń. Przy stacji robota przygotowuję przyłącze wody i kanalizacji pod automatyczne napełnianie i opróżnianie.",
+  },
+  {
+    q: "Czy robisz inspekcję kanalizacji kamerą?",
+    a: "Tak, na życzenie. Kamera pokazuje stan rury od środka: pęknięcia, wysunięte uszczelki, osad, korzenie i przedmioty, które utknęły w przewodzie. Z przeglądu robię nagranie i zdjęcia, które mogę przekazać, na przykład przed remontem.",
+  },
+];
+
+const services = [
+  "Montaż i wymiana baterii",
+  "Wymiana zaworów i wężyków",
+  "Naprawa spłuczek i stelaży podtynkowych",
+  "Montaż i naprawa syfonów",
+  "Podłączenie pralki i zmywarki",
+  "Podłączenie stacji robota sprzątającego",
+  "Lokalizacja wycieków wody",
+  "Osuszanie po zalaniu",
+  "Udrażnianie zlewów sprężyną elektryczną",
+  "Udrażnianie toalet",
+  "Udrażnianie wanien i brodzików",
+  "Udrażnianie pionów kanalizacyjnych",
+  "Ciśnieniowe czyszczenie kanalizacji WUKO",
+  "Inspekcja kanalizacji kamerą",
+];
+
+const schemaBusiness = {
+  "@context": "https://schema.org",
+  "@type": "Plumber",
+  "@id": `${site.domain}/#hydraulik`,
+  name: site.name,
+  description: "Usługi hydrauliczne w Ząbkach: naprawy spłuczek, wymiana baterii i zaworów, montaż syfonów, podłączenie pralek i zmywarek oraz udrażnianie rur sprężyną elektryczną i metodą WUKO.",
+  url: `${site.domain}/`,
+  telephone: site.phoneTel,
+  areaServed: [
+    { "@type": "City", name: "Ząbki" },
+    { "@type": "City", name: "Marki" },
+    { "@type": "City", name: "Zielonka" },
+    { "@type": "AdministrativeArea", name: "Warszawa Targówek" },
+    { "@type": "AdministrativeArea", name: "Warszawa Rembertów" },
+  ],
+  address: { "@type": "PostalAddress", addressLocality: "Ząbki", addressCountry: "PL" },
+  geo: { "@type": "GeoCoordinates", latitude: 52.29278, longitude: 21.11611 },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Usługi hydrauliczne",
+    itemListElement: services.map((name) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name },
+    })),
+  },
+};
+
+const schemaFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+---
+<Layout title="Usługi hydrauliczne Ząbki — naprawy, montaż i udrażnianie" description="Usługi hydrauliczne w Ząbkach: naprawa spłuczek, wymiana baterii i zaworów, montaż syfonów, podłączenie pralki i zmywarki. Także udrażnianie zlewów sprężyną elektryczną i WUKO.">
+<Fragment slot="head">
+<script type="application/ld+json" set:html={JSON.stringify(schemaBusiness)} />
+<script type="application/ld+json" set:html={JSON.stringify(schemaFaq)} />
+</Fragment>
+<main class="wrap"><header class="hero">
+<svg class="logo" viewBox="0 0 320 205" role="img" aria-label="Hydraulik Ząbki — lokalne usługi"><defs><linearGradient id="sign" x2="0" y2="1"><stop stop-color="#3880a1"/><stop offset="1" stop-color="#184b6b"/></linearGradient></defs><g stroke="#183c4c" stroke-width="5" stroke-linejoin="round"><path d="M63 94V62l26-22 28 22v32M119 96V46h39v50M169 95V67l28-23 28 23v28" fill="#e9ead7"/><path d="M52 64l37-33 38 33M158 67l39-32 39 32" fill="none"/><path d="M241 99V54M275 103V68" stroke="#475d34"/><path d="M241 25l-21 38h42ZM275 40l-21 38h42Z" fill="#528443"/><rect x="24" y="93" width="272" height="74" rx="13" fill="url(#sign)"/><path d="M46 170h228l-16 22H63Z" fill="#427645"/></g><g fill="#6797ad"><path d="M79 64h16v23H79ZM127 57h10v14h-10ZM142 57h10v14h-10ZM186 67h20v22h-20Z"/></g><text x="160" y="117" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="15" letter-spacing="4" fill="#e3f2f5">HYDRAULIK</text><text x="160" y="157" text-anchor="middle" font-family="Arial" font-weight="900" font-size="46" letter-spacing="3" fill="#fff5d7">ZĄBKI</text><text x="160" y="185" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" letter-spacing="2" fill="white">BLISKO TWOJEGO DOMU</text></svg>
+<h1>Usługi hydrauliczne<br>w Ząbkach.</h1><p class="lead">Naprawiam spłuczki, wymieniam baterie i zawory, podłączam pralki i zmywarki.<br>Pomagam przy usterkach instalacji wodnej i kanalizacyjnej w domach i mieszkaniach.</p><div class="actions"><a href="#kontakt" class="btn green">Umów wizytę</a><a href="#uslugi" class="btn blue">Sprawdź usługi</a></div><div class="bar"><span>⌖ Ząbki i okolice</span><span>✓ Bezpośredni kontakt</span><span>✓ Jasne ustalenia</span></div>
+<section class="offer glass" id="zakres-uslug" aria-labelledby="offer-title"><span class="eyebrow">Pomoc w domu i mieszkaniu</span><h2 id="offer-title">Usługi hydrauliczne w Ząbkach</h2><p class="offer-intro">Wykonuję naprawy hydrauliczne, wymieniam armaturę i podłączam urządzenia do wody oraz kanalizacji. Zajmuję się również udrażnianiem zlewów sprężyną elektryczną i czyszczeniem kanalizacji metodą WUKO. Zakres prac i koszt ustalam przed rozpoczęciem usługi.</p><ul class="offer-list"><li><h3>Montaż i wymiana baterii</h3><p>Wymieniam baterie kuchenne i łazienkowe oraz sprawdzam szczelność przyłączy.</p></li><li><h3>Wymiana zaworów i wężyków</h3><p>Wymieniam nieszczelne zawory odcinające i elastyczne przewody doprowadzające wodę.</p></li><li><h3>Naprawa spłuczek i stelaży podtynkowych</h3><p>Wymieniam zawory napełniające, spustowe i uszczelki, gdy woda stale spływa do toalety.</p></li><li><h3>Montaż i naprawa syfonów</h3><p>Usuwam przecieki pod zlewem i umywalką oraz naprawiam dostępne połączenia odpływowe.</p></li><li><h3>Podłączenie pralki i zmywarki</h3><p>Podłączam dopływ wody i odpływ urządzenia, a następnie sprawdzam szczelność połączeń.</p></li><li><h3>Podłączenie stacji robota sprzątającego</h3><p>Przygotowuję przyłącze wody i kanalizacji dla stacji z automatycznym napełnianiem i opróżnianiem.</p></li><li><h3>Lokalizacja wycieków wody</h3><p>Szukam miejsca nieszczelności instalacji, aby ustalić zakres potrzebnej naprawy.</p></li><li><h3>Osuszanie po zalaniu</h3><p>Pomagam usunąć wilgoć po awarii; zakres osuszania ustalam po ocenie miejsca zalania.</p></li><li><h3>Udrażnianie zlewów sprężyną elektryczną</h3><p>Usuwam zatory w odpływach zlewów za pomocą sprężyny elektrycznej. Udrażniam również odpływy umywalek.</p></li><li><h3>Udrażnianie toalet</h3><p>Przywracam drożność odpływu WC i sprawdzam swobodny przepływ wody po usunięciu zatoru.</p></li><li><h3>Udrażnianie wanien i brodzików</h3><p>Czyszczę zatkane odpływy i dobieram dostęp do rury do konstrukcji syfonu.</p></li><li><h3>Udrażnianie pionów kanalizacyjnych</h3><p>Usuwam zatory w pionach powodujące cofanie ścieków do niżej położonych odpływów.</p></li><li><h3>Ciśnieniowe czyszczenie kanalizacji WUKO</h3><p>Wypłukuję osady z rur i przyłączy kanalizacyjnych wodą pod ciśnieniem.</p></li><li><h3>Inspekcja kanalizacji kamerą</h3><p>Po udrożnieniu sprawdzam wnętrze rury, szukając uszkodzeń i przyczyn nawracających zatorów.</p></li></ul><div class="offer-footer"><span>Nie wiesz, gdzie leży przyczyna? Opisz mi objawy.</span><a class="btn green" href="#kontakt">Zapytaj o usługę</a></div></section></header>
+<section id="uslugi"><div class="center"><span class="eyebrow">W czym mogę pomóc</span><h2>Naprawy, wymiany<br>i podłączenia hydrauliczne.</h2><p>Cieknąca bateria, niesprawna spłuczka czy nowa zmywarka do podłączenia? Dobieram sposób naprawy lub montażu do instalacji i sprawdzam szczelność po zakończeniu pracy.</p></div><div class="cards"><article class="card glass"><div class="icon">⚒</div><h3>Naprawy hydrauliczne i wymiany</h3><p>Wymieniam baterie, zawory, wężyki i elementy spłuczek. Usuwam nieszczelności w połączeniach.</p></article><article class="card glass"><div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="18" height="20" rx="3"/><path d="M3 7h18M6 4.5h3"/><circle cx="12" cy="14" r="4.5"/></svg></div><h3>Montaż armatury i podłączenia</h3><p>Podłączam pralki, zmywarki i stacje robotów sprzątających. Montuję syfony i sprawdzam szczelność.</p></article><article class="card glass"><div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v9h10v7H8a5 5 0 0 1-5-5Z"/><path d="M1 3h11M20 10v11"/></svg></div><h3>Udrażnianie kanalizacji</h3><p>Udrażniam zlewy sprężyną elektryczną. Do czyszczenia rur i przyłączy kanalizacyjnych stosuję także WUKO — metodę dobieram do instalacji i rodzaju zatoru.</p></article></div></section>
+<section><div class="split"><div class="frame"><div class="photo-placeholder"><span>Miejsce na zdjęcie</span><small>Przykładowe przyłącza hydrauliczne stacji robota sprzątającego</small></div></div><div><span class="eyebrow">Lokalny hydraulik</span><h2>Blisko Ciebie.<br>Konkretnie o naprawie.</h2><p>Rozmawiasz bezpośrednio ze mną. Opisz objawy, a ustalę, co warto sprawdzić i jak przygotować się do wizyty.</p><div class="ticks"><div class="tick">Dojazd do Ząbek i okolicznych miejscowości</div><div class="tick">Ustalenie zakresu i kosztu przed pracą</div><div class="tick">Dobór metody do instalacji i problemu</div><div class="tick">Sprawdzenie działania po naprawie</div></div></div></div><div class="split services"><div><span class="eyebrow">Usługi hydrauliczne</span><h2>Cieknący zawór?<br>Niesprawna spłuczka?</h2><p>Wymieniam zużyte zawory i wężyki, naprawiam spłuczki, montuję baterie oraz syfony. Podłączam też urządzenia AGD. Jeśli problemem jest zatkany zlew, udrażniam odpływ sprężyną elektryczną.</p><div class="servicegrid"><div class="tick">Wymiana baterii i zaworów</div><div class="tick">Naprawa spłuczek</div><div class="tick">Montaż i naprawa syfonów</div><div class="tick">Podłączenie pralki i zmywarki</div><div class="tick">Udrażnianie zlewów sprężyną</div><div class="tick">Czyszczenie kanalizacji WUKO</div></div></div><div class="frame"><div class="photo-placeholder"><span>Miejsce na zdjęcie</span><small>Przykładowy zawór i wężyk przy zbiorniku WC</small></div></div></div></section>
+<section class="center"><span class="eyebrow">Przykłady instalacji</span><h2>Detale, które mają znaczenie.</h2><p>Przykładowe przyłącza wody i elementy odpływu.</p><div class="gallery"><figure class="glass"><div class="photo-placeholder"><span>Miejsce na zdjęcie</span><small>Podłączenie stacji robota</small></div><figcaption>Podłączenie stacji robota</figcaption></figure><figure class="glass"><div class="photo-placeholder"><span>Miejsce na zdjęcie</span><small>Zawór przy toalecie</small></div><figcaption>Przyłącze przy zbiorniku WC</figcaption></figure><figure class="glass"><div class="photo-placeholder"><span>Miejsce na zdjęcie</span><small>Zdemontowane elementy odpływu brodzika</small></div><figcaption>Kontrola odpływu brodzika</figcaption></figure></div></section>
+<section class="local center"><span class="eyebrow">Po sąsiedzku</span><h2>Ząbki i okolice.</h2><p>Pomoc hydrauliczna w Twojej okolicy.<br>Dostępny termin i dojazd ustalam podczas kontaktu.</p><div class="places"><span>Ząbki</span><span>Marki</span><span>Zielonka</span><span>Targówek</span><span>Rembertów</span></div></section>
+<section class="faq" id="faq"><div class="center"><span class="eyebrow">Najczęstsze pytania</span><h2>Pytania o hydraulika w Ząbkach.</h2></div><div class="faq-list">{faq.map((f) => (<details class="glass"><summary>{f.q}</summary><p>{f.a}</p></details>))}</div></section>
+<div class="cta glass"><h2>Potrzebujesz hydraulika?</h2><p>Opisz usterkę. Ustalmy, jak mogę Ci pomóc.</p><div class="actions"><a class="btn green" href="#kontakt">Kontakt telefoniczny</a><a class="btn blue" href={`tel:${site.phoneTel}`}>Zadzwoń: {site.phone}</a></div></div>
+<section class="contact" id="kontakt"><div class="form glass phone-contact"><span class="eyebrow">Kontakt telefoniczny</span><h2>Potrzebujesz hydraulika w Ząbkach?</h2><p>Zadzwoń i opisz, co się dzieje. Ustalę z Tobą zakres prac i dostępny termin.</p><h3>Przed rozmową przygotuj:</h3><ul class="call-checklist"><li>ulicę i miejscowość,</li><li>krótki opis usterki,</li><li>informację, od kiedy występuje problem.</li></ul><a class="btn green" href={`tel:${site.phoneTel}`}>Zadzwoń: {site.phone}</a></div><aside class="area glass"><span class="eyebrow">Mój obszar działania</span><h2>Hydraulik Ząbki</h2><p>Ząbki i sąsiednie miejscowości.</p><div class="map"><iframe title="Mapa Ząbek — obszar dojazdu" src="https://maps.google.com/maps?q=Z%C4%85bki%2C%20Polska&amp;ll=52.29278,21.11611&amp;z=14&amp;hl=pl&amp;output=embed" width="100%" height="260" style="display:block;width:100%;height:100%;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div><p>Zadzwoń, aby ustalić termin i dojazd.</p><a href={`tel:${site.phoneTel}`}>{site.phone}</a></aside></section>
+<footer><span><b>HYDRAULIK ZĄBKI</b><br>Naprawy · Montaż · Udrażnianie</span><span>Lokalny projekt strony<br>© 2026</span><a href="#">Wróć na górę</a></footer></main>
+<div class="sticky-phone"><a href={`tel:${site.phoneTel}`} aria-label={`Zadzwoń pod numer ${site.phone}`}><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.35 1.9.69 2.79a2 2 0 0 1-.45 2.11L8.09 9.89a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.89.34 1.83.57 2.79.69A2 2 0 0 1 22 16.92z"/></svg><span>Zadzwoń: {site.phone}</span></a></div>
 </Layout>
